@@ -4,9 +4,10 @@ library(tidytext)
 library(stopwords)
 library(udpipe)
 
-#-----------------------------------------------------------
-# What does Finland research (based on #minätutkin tweets) ?
-#-----------------------------------------------------------
+#------------------------------------------------------------------
+# Based on #minätutkin tweets until midday 2021-09-12,
+# With what words do researchers in Finland explain their research ?
+#------------------------------------------------------------------
 
 q <- "#minätutkin"
 tweets <- search_tweets(q, n = 5000, include_rts = FALSE)
@@ -314,4 +315,5 @@ write_csv(x_fi_g, file = "words_fi.csv")
 
 # How many rows with occ > 1 ?
 (over1 <- str_c(round(nrow(x_fi_g[x_fi_g$n > 1,]) / nrow(x_fi_g[x_fi_g$n == 1,]) * 100), "%", sep = " "))
-# "40 %" -> 60% rows uncleaned
+# "40 %" 
+# so 60% of words remain uncleaned
