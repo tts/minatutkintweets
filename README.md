@@ -1,3 +1,3 @@
 # minatutkintweets
 
-Tweets containing #minätutkii until midday 2021-09-12. Tokenized, cleaned (some of it), and lemmatized by lang.
+Tweets containing #minätutkii until midday 2021-09-12. By lang, tokenized, cleaned (some of it), lemmatized, and calculated the number of occurrences by word.
