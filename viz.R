@@ -42,6 +42,16 @@ gc()
 # Just a copy
 viz <- to_viz
 
+this_theme <- theme(
+  legend.position = "none",
+  plot.background = element_rect(fill = "grey10", color = NA),
+  axis.text.x = element_text(size = 20, face = "bold", margin = margin(10, 0, 0, 0), color = "grey97"),
+  plot.margin = margin(20, 5, 20, 5),
+  plot.title = element_text(face = "bold", size = 30, color = "grey97"),
+  plot.subtitle = element_text(size = 18, margin = margin(5, 0, 10, 0), color = "grey97"),
+  plot.caption = element_text(size = 8, margin = margin(10, 0, 0, 0), color = "grey97")
+)
+
 # https://stackoverflow.com/a/53598064
 viz <- arrange(viz, day, n) %>% 
   filter(n >= 400) %>% # graph coloring breaks when aux size > 30
@@ -60,28 +70,27 @@ g <- ggplot(data = viz, aes(x = day, y = n, fill = interaction(n, day))) +
                     values = v_colors[viz$group],
                     labels = with(to_viz, group[aux]), 
                     breaks = with(to_viz, interaction(n, day)[aux])) +
-  scale_size_continuous(range = c(1, 5)) +
+  scale_size_continuous(range = c(2, 5)) +
   scale_x_continuous(breaks = seq(6, 12, 1)) +
   coord_cartesian(expand = FALSE, clip = "off") +
   labs(
     title = "#minätutkin 6-11.9.2021",
-    subtitle = "Ryhmän suhteellinen osuus päivittäin (n > 400)",
+    subtitle = "Ryhmien suhteellinen osuus (n >= 400)",
     caption = "Lähteet: Twitter, Finto AI, Finto API"
   ) +
-  theme_void() +
-  theme(
-    legend.position = "none",
-    plot.background = element_rect(fill = "grey10", color = NA),
-    axis.text.x = element_text(size = 20, face = "bold", margin = margin(10, 0, 0, 0), color = "grey97"),
-    plot.margin = margin(20, 5, 20, 5),
-    plot.title = element_text(face = "bold", size = 30, color = "grey97"),
-    plot.subtitle = element_text(size = 18, margin = margin(5, 0, 10, 0), color = "grey97"),
-    plot.caption = element_text(size = 8, margin = margin(10, 0, 0, 0), color = "grey97")
-  )
+  theme_void() + this_theme
 g
-ggsave("minatutkin.pdf", width = 10.2, height = 6.5, device = cairo_pdf)
 
-# Day 12 separately because then, no n > 400
+ggsave(
+  "minatutkintweets.png",
+  width = 35, 
+  height = 25, 
+  dpi = 300, 
+  units = "cm", 
+  device = 'png'
+)
+
+# Day 12 separately because then, no n >= 400
 viz <- to_viz
 
 viz <- to_viz %>% 
@@ -92,23 +101,22 @@ g <- ggplot(data = viz, aes(x = day, y = n, fill = group)) +
   geom_bar(stat = "identity", position = "fill", width = 1) +
   geom_text(aes(label = group, size = n), position = position_fill(vjust = 0.5), check_overlap = TRUE, color = "grey10") +
   scale_fill_viridis_d(option = "turbo", begin = 0.05, end = 0.95) +
-  scale_size_continuous(range = c(1, 5)) +
+  scale_size_continuous(range = c(2, 5)) +
   scale_x_continuous(breaks = seq(6, 12, 1)) +
   coord_cartesian(expand = FALSE, clip = "off") +
   labs(
     title = "#minätutkin 12.9.2021",
-    subtitle = "Suhteellinen osuus",
-    caption = "Lähteet: Twitter, FINTO. Alkuperäinen grafiikkakoodi: Georgios Karamanis"
+    subtitle = "Ryhmien suhteellinen osuus",
+    caption = "Lähteet: Twitter, Finto AI, Finto API"
   ) +
-  theme_void() +
-  theme(
-    legend.position = "none",
-    plot.background = element_rect(fill = "grey10", color = NA),
-    axis.text.x = element_text(size = 20, face = "bold", margin = margin(10, 0, 0, 0), color = "grey97"),
-    plot.margin = margin(20, 5, 20, 5),
-    plot.title = element_text(face = "bold", size = 30, color = "grey97"),
-    plot.subtitle = element_text(size = 18, margin = margin(5, 0, 10, 0), color = "grey97"),
-    plot.caption = element_text(size = 8, margin = margin(10, 0, 0, 0), color = "grey97")
-  )
+  theme_void() + this_theme
 g
-ggsave("minatutkin_2021-09-12.pdf", width = 10.2, height = 6.5, device = cairo_pdf)
+
+ggsave(
+  "minatutkintweets_12.png",
+  width = 35, 
+  height = 25, 
+  dpi = 300, 
+  units = "cm", 
+  device = 'png'
+)
