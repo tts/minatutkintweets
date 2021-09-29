@@ -1,8 +1,5 @@
 library(rtweet)
 library(tidyverse)
-library(tidytext)
-library(stopwords)
-library(udpipe)
 
 #--------------------------------------------
 # #minätutkin tweets until midday 2021-09-12
