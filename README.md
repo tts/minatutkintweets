@@ -1,3 +1,3 @@
 # minatutkintweets
 
-Tweets containing #minätutkii until midday 2021-09-12. By lang, tokenized, cleaned (some of it), lemmatized, and calculated the number of occurrences by word.
+Fetching tweets containing #minätutkii until midday 2021-09-12, keywording them automatically by lang with Finto AI, grouping keywords with Finto API, and visualizing results.
