@@ -9,8 +9,12 @@ ui <- fluidPage(
   
   title = "#minätutkin-twiitit",
   
-  titlePanel("Finto AI ehdottaa asiasanoja"),
+  titlePanel("Finto AI ehdottaa asiasanoja #minätutkin-twiitille"),
   
+  fluidRow(
+    column(10,
+           tags$div(class="header", checked = NA,
+                    tags$a(href="https://github.com/tts/minatutkintweets", "Ks. GitHub")))),
   fluidRow(
     column(1,
            selectInput(inputId = "day",
@@ -56,7 +60,6 @@ server <- function(input, output, session) {
   # Update the list of selectable tweets based on the day
   observeEvent(day_selected(), {
     choices <- day_selected()$alltext
-    #updateSelectInput(inputId = 'tw', choices = choices)
     updateSelectizeInput(session, inputId = 'tw', choices = choices, server = TRUE)
     })
   
@@ -133,7 +136,7 @@ server <- function(input, output, session) {
     output$kw <- renderTable(req_parsed)
     
   })
-
+  
 }
 
 
