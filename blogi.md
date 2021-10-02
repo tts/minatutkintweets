@@ -44,7 +44,7 @@ Tämän osuuden koodi on tiedostossa [gettweets.R](https://github.com/tts/minatu
 
 ### Asiasanoitus
 
-Finto AI -rajapintapalvelulle lähetetään asiasanoitettava teksti HTTP POST -kutsussa. Palautettavien asiasanojen lukumäärää voi säätää (limit), samoin niiden osumistarkkuutta (threshold). Lisäksi URL:ssa on oltava tieto projektista eli käytännössä siitä, minkä kielisestä tekstistä on kyse. Palvelulla on interaktiivinen [hiekkalaatikko](https://ai.finto.fi/v1/ui/).
+Finto AI -rajapintapalvelulle lähetetään asiasanoitettava teksti HTTP POST -kutsussa. Palautettavien asiasanojen lukumäärää voi säätää (limit), samoin niiden osumistarkkuuden kynnysarvoa (threshold). Lisäksi URL:ssa on oltava tieto projektista eli siitä, minkä kielisestä tekstistä on kyse. Palvelulla on interaktiivinen [hiekkalaatikko](https://ai.finto.fi/v1/ui/).
 
 En osaa sanoa, kuinka luotettava Twitterin palauttama `lang`-arvo on, mutta joka tapauksessa käytin sitä. Satunnaisotannalla se näytti kertovan totta. Toinen asia on sitten se, että jotkut twiittaajat käyttävät twiiteissään kahta kieltä. Ei-englantilaiselle käyttäjälle, jolla on myös englanninkielisiä seuraajia, kieli onkin jatkuva päänsärky. Yksi vaihtoehto on ylläpitää kahta erikielistä tiliä, mutta kankeaa se on. Twitter tarjoaa kylläkin automaattista käännösapua lukijalle, mikä toimiikin melko mukavasti.
 
@@ -66,11 +66,11 @@ resp <- httr::RETRY(verb = "POST",
 
 Kaikkien twiittien asiasanoitus tarkoittaa toistuvaa rajapinnan kutsua. Finto AI:n käyttöohjeissa toivotaan, ettei rajapintaa pommitettaisi samanaikaisilla kutsuilla, mikä on ymmärrettävää. Rajapinta on toistaiseksi täysin avoin, mitään rekisteröintiä ei ole. Otin yhteyttä Finton asiakaspalveluosoitteeseen, kun aloin epäillä koodini aiheuttavan ongelmia. Yritin näet lisätä kutsujen väliin `Sys.sleep()` -kutsun, mutta en sittenkään onnistunut löytämään sille toimivaa koloa; kutsut palauttivat tyhjää. Finton vastaus oli rauhoittava: he eivät olleet huomanneet palvelussa mitään kuormitusta.
 
-Kutsujen käsittelyyn lainasin ison osan vastaavasta koodista [roadoi](https://github.com/ropensci/roadoi)-kirjastolta, joka on osa [rOpenSci-yhteisön](https://ropensci.org/) piirissä ylläpidettävistä monista työkaluista. Minulla oli kunnia olla mukana roadoin [review-prosessissa](https://github.com/ropensci/software-review/issues/115). Siinä keskityin toiminnallisuuteen ja opasteisiin, nyt hyödynsin kirjastoa ensimmäistä kerran kooditasolla. Kysyin Najko Jahnilta, [mihin hän asettaisi paussin](https://github.com/ropensci/roadoi/issues/33). Najko ehdotti, että vaihtaisin `httr`:n tilalle modernimman kirjaston [httr2](https://httr2.r-lib.org/). Tutustumisen paikka.
+Kutsuihin ja tulosten parsimiseen lainasin ison osan vastaavasta koodista [roadoi](https://github.com/ropensci/roadoi)-kirjastolta, joka on osa [rOpenSci-yhteisön](https://ropensci.org/) piirissä ylläpidettävistä monista työkaluista. Minulla oli kunnia olla mukana roadoin [review-prosessissa](https://github.com/ropensci/software-review/issues/115). Siinä keskityin toiminnallisuuteen ja opasteisiin, nyt hyödynsin kirjastoa ensimmäistä kerran kooditasolla. Kysyin Najko Jahnilta, [mihin hän asettaisi paussin](https://github.com/ropensci/roadoi/issues/33). Najko ehdotti, että vaihtaisin `httr`:n tilalle kirjaston [httr2](https://httr2.r-lib.org/). Tutustumisen paikka. Samoin se, miten vaihtaa `plyr::llply` modernimpaan `purrr::map*´-funktioon, jotta toisteisuus koodissa vähenisi.
 
-*Jos toistat saman asian kolmesti, tee funktio* on tuttu toteama. Kolme kieltä, kolme toistoa. Ensi kerralla sitten funktio :)
+Miten Finto AI onnistuu? Sitä voi testata twiittikohtaisesti tässä pienessä [apupalvelussa](https://ttso.shinyapps.io/minatutkintweets/) Valitse ensin jokin syyskuun päivistä (6-12), sitten yksi sen twiiteistä, vaihda palautettavien asiasanojen lukumäärää jos haluat - ja klikkaa lopuksi Hae!-nappia. Tulos palautuu muutamassa sekunnissa. Tässä omassa harjoitelmassani käytin kolmea asiasanaa, eikä kynnysarvoa ollut. Finto AI tarjoaa omavalintaiselle tekstille [tämän webbisivun](https://ai.finto.fi/).
 
-Asiasanoituksen koodi on tiedostossa [finto_ai_keywording.R](https://github.com/tts/minatutkintweets/blob/main/finto_ai_keywording.R)
+Asiasanoituksen koodi on tiedostossa [finto_ai_keywording.R](https://github.com/tts/minatutkintweets/blob/main/finto_ai_keywording.R) ja interaktiivisen [Shiny](https://github.com/rstudio/shiny)-applikaation tiedostossa [app.R](https://github.com/tts/minatutkintweets/blob/main/app.R)
 
 ### Ryhmittely ja visualisointi
 
