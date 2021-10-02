@@ -72,6 +72,7 @@ server <- function(input, output, session) {
   # When the button is clicked
   observeEvent(input$do, {
     
+    # Functions adapted from https://github.com/ropensci/roadoi/blob/main/R/oadoi_fetch.r
     parse_req <- function(req) {
       tibble::tibble(
         label = list(tibble::as_tibble(req$results$label)),
@@ -130,7 +131,7 @@ server <- function(input, output, session) {
         parse_req()
     }
     
-    # Unndest result from tibble to dataframe
+    # Unnest result from tibble to dataframe
     req_parsed <-  unnest_req(r)
     
     output$kw <- renderTable(req_parsed)
