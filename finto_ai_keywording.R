@@ -1,7 +1,7 @@
 library(tidyverse)
 library(httr)
 
-source("functions.R")
+source("utils.R")
 
 data <- readRDS("tweets.RDS")
 
@@ -124,6 +124,8 @@ data_cleaned_by_user <- data_cleaned %>%
   mutate(alltext = paste0(text, collapse = "")) %>% 
   distinct(user_id, .keep_all = TRUE)
 
+write_csv(data_cleaned_by_user, "cleaned_tweets_by_user.csv")
+
 #  Automatic keywording with Finto AI
 #  https://www.kiwi.fi/display/Finto/Finto+AI%3An+rajapintapalvelu
 
@@ -138,7 +140,6 @@ req <- plyr::llply(tw_vec_fi, kw_fetch, project = "yso-fi", .progress = "text") 
   dplyr::bind_rows()
 
 write_rds(req, "req_fi_3.RDS")
-
 out_fi <- unnest_req(req)
 write_rds(out_fi, "out_fi_3.RDS")
 

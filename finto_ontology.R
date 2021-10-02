@@ -1,6 +1,8 @@
 library(tidyverse)
 library(httr)
 
+source("utils.R")
+
 #----------------------
 # Broader terms
 #----------------------
