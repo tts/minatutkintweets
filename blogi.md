@@ -16,11 +16,11 @@ output:
     highlight: tango
 ---
 
-Syyskuun alussa 2021 Twitterin aihetunniste *minätutkin* oli suosittu. Itä-Suomen yliopiston akateeminen rehtori Tapio Määttä [sysäsi meemin liikkeelle](https://twitter.com/tapiomaatta/status/1434449463268057092), ja pain siihen liitettiin sopiva aihetunniste. Tutkijat innostuivat tiivistämään työnsä twiitin merkkimäärään ja suuri yleisö innostui yhtä lailla lukemastaan. Vaikka Suomesta löytyy ajantasaisia sivustoja tutkimuksesta, uusimpana [tutkimustietovaranto](https://www.tiedejatutkimus.fi/fi/), niiden varsinainen fokus ei ole tehdä tiedettä helposti lähestyttäväksi. Toki ne saattavat onnistua siinäkin, mutta vain välillisesti.
+Syyskuun alussa 2021 Twitterin aihetunniste *minätutkin* oli suosittu. Itä-Suomen yliopiston akateeminen rehtori Tapio Määttä [sysäsi idean liikkeelle](https://twitter.com/tapiomaatta/status/1434449463268057092), ja pian siihen saatiin liitettyä sopiva aihetunniste. Tutkijat innostuivat tiivistämään työnsä twiitin merkkimäärään ja suuri yleisö innostui yhtä lailla lukemastaan. Vaikka Suomesta löytyy ajantasaisia sivustoja tutkimuksesta, uusimpana [tutkimustietovaranto](https://www.tiedejatutkimus.fi/fi/), niiden varsinainen fokus ei ole tehdä tiedettä helposti lähestyttäväksi. Toki ne saattavat onnistua siinäkin, mutta vain välillisesti.
 
 Mistä sitten twiitattiin? Mitä olivat ne tieteenalat, joiden tutkijat ehtivät tai kiinnostuivat twiittaamaan? Millä termeillä aloja kuvattiin? 
 
-Päätin tehdä epätieteellisen tutkimuksen siitä, miten Kansalliskirjaston [Finto AI -rajapintapalvelu](https://www.kiwi.fi/display/Finto/Finto+AI%3An+rajapintapalvelu) palvelisi twiittien automaattisessa asiasanoituksessa ja [Finto API](https://api.finto.fi/) näiden asiasanojen ryhmittelyssä pääluokkiin. Heti alkuun on muistutettava siitä, että Finto AI on toistaiseksi pelkkä suosittelija; ihmisen on tarkoitus tehdä lopulliset asiasanavalinnat. Näin toimitaan mm. Jyväskylän yliopistossa, jossa opiskelijat asiasanoittavat opinnäytteensä Finto API:lla, valitsevat ehdotuksista sopivat (tai muokkaavat niitä), ja lopuksi kirjastonhoitaja hyväksyy ne. Tässä harjoituksessa annan kuitenkin mennä täysautomaatilla, kädet poissa ratilta. 
+Päätin tehdä epätieteellisen tutkimuksen siitä, miten Kansalliskirjaston [Finto AI -rajapintapalvelu](https://www.kiwi.fi/display/Finto/Finto+AI%3An+rajapintapalvelu) palvelisi twiittien automaattisessa asiasanoituksessa. Heti alkuun on muistutettava siitä, että Finto AI on toistaiseksi pelkkä suosittelija; ihmisen on tarkoitus tehdä lopulliset asiasanavalinnat. Näin toimitaan mm. Jyväskylän yliopistossa, jossa opiskelijat asiasanoittavat opinnäytteensä Finto API:lla, valitsevat ehdotuksista sopivat (tai muokkaavat niitä), ja lopuksi kirjastonhoitaja hyväksyy ne. Tässä harjoituksessa annan kuitenkin mennä täysautomaatilla, kädet poissa ratilta. 
 
 (Alla olevat koodit ovat [Github-repossa](https://github.com/tts/minatutkintweets).)
 
@@ -82,15 +82,27 @@ Miten erottaa twiittien vapaasta kielenkäytöstä tieteenala? Ei mitenkään il
 
 Vakavasti puhuen oma tavoitteeni oli saada aikaan visualisointi siitä, mistä aiheista suunnilleen twiitattiin ja mitkä niiden suhteet olivat päivittäin. Pelkkien asiasanojen käyttö ei tässä kohtaa tuntunut järkevältä. Niitä tulee liikaa. Olisin voinut pysyä tiukasti yhden asiasanan politiikassa per twiitti, jolloin kirjo olisi ollut pienempi, mutta siinä olisi luultavasti menetetty iso osa twiittien sisällöstä. Sitä paitsi ensimmäinen asiasana voi olla täydellinen huti.
 
-Finto-palvelu yllättää monipuolisuudellaan. En edes heti äkännyt, mitä kaikkea on tarjolla. Niinpä tartuin ensimmäiseen löydökseen ja hain asiasanoille yhtä tasoa yleisemmän termin (broader term). Niitä parsiessa ja ryhmitellessä kävin vielä kerran läpi vaihtoehtoja ja kas, sanastokohtaisista metodeista löytyi rajapinta [get_vocid_data](https://api.finto.fi/doc/#!/Vocabulary45specific32methods/get_vocid_data), joka palauttaa mm. asiasanan [käsiteryhmän](https://finto.fi/yso/fi/groups). Niitäkin on paljon, mutta luonnollisesti huomattavan paljon vähemmän kuin asiasanoja.
+Finto-palvelu yllättää monipuolisuudellaan. En edes heti äkännyt, mitä kaikkea on tarjolla. Niinpä tartuin ensimmäiseen löydökseen ja hain asiasanoille yhtä tasoa yleisemmän termin (broader term). Niitä parsiessa kävin vielä kerran läpi vaihtoehtoja ja kas, [Finto API:n](https://api.finto.fi/) sanastokohtaisista metodeista löytyi rajapinta [get_vocid_data](https://api.finto.fi/doc/#!/Vocabulary45specific32methods/get_vocid_data), joka palauttaa mm. asiasanan [käsiteryhmän](https://finto.fi/yso/fi/groups). Niitäkin on paljon, mutta ilman muuta huomattavan paljon vähemmän kuin asiasanoja.
 
 Tämän osuuden koodi on tiedostossa [finto_ontology.R](https://github.com/tts/minatutkintweets/blob/main/finto_ontology.R).
 
 ### Visualisointi
 
-Olen seurannut R-ekosysteemin viikottaista [#tidytuesday](https://github.com/rfordatascience/tidytuesday)-projektia. Viikolla 37 julkaistu datasetti käsitteli USA:n [Billboard Top 100](https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-09-14/readme.md) -listaa. Sen visualisoinneista osui silmiini Georgios Karamanisin visuaalisesti näyttävä [toteutus](https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week37), jossa vaaka-akselilla on vuosi ja pystyakselilla pylväsgraafi musiikkityylien suhteellisista osuuksista kunakin vuonna. 
+Olen seurannut R-ekosysteemin viikottaista [#tidytuesday](https://github.com/rfordatascience/tidytuesday)-projektia. Viikolla 37 julkaistu datasetti käsitteli USA:n [Billboard Top 100](https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-09-14/readme.md) -listaa. Sen visualisoinneista osui silmiini Georgios Karamanisin visuaalisesti näyttävä [toteutus](https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week37), jossa vaaka-akselilla on vuosi ja pystyakselilla jaettu pylväsgraafi musiikkityylien suhteellisista osuuksista kunakin vuonna. Otin hänen `ggplot2`-koodistaan mallia.
 
-Karamanisin graafissa tyylilajit olivat nimen mukaisessa aakkosjärjestyksessä. 
+Karamanisilla tyylit ovat nimen mukaisessa aakkosjärjestyksessä. #minätutkin-graafiin halusin sen sijaan käsiteryhmät päällekkäin suuruusjärjestyksessä. Tämä edellytti faktoreiden (factor) uudelleenjärjestämistä. Työhön upposi luvattoman paljon aikaa, ja lopputuloksessa on edelleen parantamisen varaa. Löysin 
+
+```
+viz <- arrange(viz, day, n) %>% 
+  filter(n >= 400) %>% # graph coloring breaks when aux size > 30
+  mutate(group = factor(group)) 
+
+aux <- with(viz, match(sort(unique(group)), group))
+
+q_colors =  length(aux) 
+v_colors =  viridis::viridis(q_colors, option = "turbo", begin = 0.05, end = 0.95)
+
+```
 
 ![kuva1](/post/yyyy-mm-dd-mina-tutkin.fi_files/kuva1.png)
 *Kuvateksti.*
