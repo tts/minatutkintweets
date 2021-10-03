@@ -36,7 +36,14 @@ ui <- fluidPage(
                        min = 1,
                        max = 10,
                        value = 3,
-                       step = 1))
+                       step = 1)),
+    # column(2,
+    #        sliderInput(inputId = "thr",
+    #                    label = "Osuvuus",
+    #                    min = 0.05,
+    #                    max = 1,
+    #                    value = 0.1,
+    #                    step = 0.1))
   ),
   fluidRow(
     column(1,
@@ -110,7 +117,7 @@ server <- function(input, output, session) {
     # API call
     req <- httr::RETRY(verb = "POST",
                         url = paste0("https://ai.finto.fi/v1/projects/", project, "/suggest"),
-                        body = list(text = tw_text, limit = input$nr, lang = tw_lang),
+                        body = list(text = tw_text, limit = input$nr, lang = tw_lang, threshold = input$thr),
                         user_agent("https://github.com/tts/minatutkintweets"))
     
     # Parse result to a tibble
