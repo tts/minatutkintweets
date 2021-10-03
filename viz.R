@@ -1,5 +1,8 @@
 library(tidyverse)
 library(lubridate)
+library(patchwork)
+
+source("utils.R")
 
 kw <- read_csv("kw_data_labels_3_date.csv")
 ts <- read_csv("terms_groups_all_3.csv")
@@ -42,25 +45,21 @@ gc()
 # Just a copy
 viz <- to_viz
 
-this_theme <- theme(
-  legend.position = "none",
-  plot.background = element_rect(fill = "grey10", color = NA),
-  axis.text.x = element_text(size = 20, face = "bold", margin = margin(10, 0, 0, 0), color = "grey97"),
-  plot.margin = margin(20, 5, 20, 5),
-  plot.title = element_text(face = "bold", size = 30, color = "grey97"),
-  plot.subtitle = element_text(size = 18, margin = margin(5, 0, 10, 0), color = "grey97"),
-  plot.caption = element_text(size = 8, margin = margin(10, 0, 0, 0), color = "grey97")
-)
+#-------------------------------------
+# All data plotted at the same time,
+# but filtered with n 
+# so some days remain unplotted
+#-------------------------------------
 
 # https://stackoverflow.com/a/53598064
 viz <- arrange(viz, day, n) %>% 
-  filter(n >= 400) %>% # graph coloring breaks when aux size > 30
+ filter(n >= 400) %>% # graph coloring breaks when aux size > 30
   mutate(group = factor(group)) 
 
 aux <- with(viz, match(sort(unique(group)), group))
 
-q_colors =  length(aux) 
-v_colors =  viridis::viridis(q_colors, option = "turbo", begin = 0.05, end = 0.95)
+q_colors <- length(aux) 
+v_colors <- viridis::viridis(q_colors, option = "turbo", begin = 0.05, end = 0.95)
 
 # Modified from https://github.com/gkaramanis/tidytuesday/blob/master/2021/2021-week37/billboard.R
 g <- ggplot(data = viz, aes(x = day, y = n, fill = interaction(n, day))) +
@@ -78,7 +77,7 @@ g <- ggplot(data = viz, aes(x = day, y = n, fill = interaction(n, day))) +
     subtitle = "Ryhmien suhteellinen osuus (n >= 400)",
     caption = "Lähteet: Twitter, Finto AI, Finto API"
   ) +
-  theme_void() + this_theme
+  theme_void() + do_theme()
 g
 
 ggsave(
@@ -90,33 +89,33 @@ ggsave(
   device = 'png'
 )
 
-# Day 12 separately because then, no n >= 400
+#-------------------------------------
+# All days plotted one by one,
+# and plots arranged size by size
+#-------------------------------------
+
 viz <- to_viz
 
-viz <- to_viz %>% 
-  filter(day == 12)
+# Note: here group color will vary from plot to plot 
+d6 <- do_g(viz[viz$day == 6,])
+d7 <- do_g(viz[viz$day == 7,])
+d8 <- do_g(viz[viz$day == 8,])
+d9 <- do_g(viz[viz$day == 9,])
+d10 <- do_g(viz[viz$day == 10,])
+d11 <- do_g(viz[viz$day == 11,])
+d12 <- do_g(viz[viz$day == 12,])
 
-# Note: just in alphabetical order by group
-g <- ggplot(data = viz, aes(x = day, y = n, fill = group)) +
-  geom_bar(stat = "identity", position = "fill", width = 1) +
-  geom_text(aes(label = group, size = n), position = position_fill(vjust = 0.5), check_overlap = TRUE, color = "grey10") +
-  scale_fill_viridis_d(option = "turbo", begin = 0.05, end = 0.95) +
-  scale_size_continuous(range = c(2, 5)) +
-  scale_x_continuous(breaks = seq(6, 12, 1)) +
-  coord_cartesian(expand = FALSE, clip = "off") +
-  labs(
-    title = "#minätutkin 12.9.2021",
-    subtitle = "Ryhmien suhteellinen osuus",
-    caption = "Lähteet: Twitter, Finto AI, Finto API"
-  ) +
-  theme_void() + this_theme
-g
+d6 + d7 + d8 + d9 + d10 + d11 + d12 + 
+  plot_layout(ncol = 7) + 
+  plot_annotation(title = "#minätutkin2021 6-12.9.2021",
+                  subtitle = "Ryhmien suhteellinen osuus",
+                  caption = "Lähteet: Twitter, Finto AI, Finto API")
 
 ggsave(
-  "minatutkintweets_12.png",
-  width = 35, 
-  height = 25, 
-  dpi = 300, 
-  units = "cm", 
+  "minatutkintweets_byday.png",
+  width = 35,
+  height = 25,
+  dpi = 300,
+  units = "cm",
   device = 'png'
 )
