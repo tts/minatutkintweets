@@ -144,3 +144,34 @@ fetch_fi_g <- function() {
   g_df <- data.frame(gl, gu, stringsAsFactors = FALSE)
   
 }
+
+#-------------
+# Plot theme
+#-------------
+
+do_theme <- function() {
+  theme(
+    legend.position = "none",
+    plot.background = element_rect(fill = "grey10", color = NA),
+    axis.text.x = element_text(size = 20, face = "bold", margin = margin(10, 0, 0, 0), color = "grey97"),
+    plot.margin = margin(20, 5, 20, 5),
+    plot.title = element_text(face = "bold", size = 30, color = "grey97"),
+    plot.subtitle = element_text(size = 18, margin = margin(5, 0, 10, 0), color = "grey97"),
+    plot.caption = element_text(size = 8, margin = margin(10, 0, 0, 0), color = "grey97")
+  )
+}
+
+#------------
+# Plot by day
+#------------
+
+do_g <- function(data) {
+  ggplot(data = data, aes(x = day, y = n, fill = fct_reorder(group, n))) +
+    geom_bar(stat = "identity", position = "fill", width = 1) +
+    geom_text(aes(label = group, size = n), position = position_fill(vjust = 0.5), check_overlap = TRUE, color = "grey10") +
+    scale_fill_viridis_d() +
+    scale_size_continuous(range = c(2, 5)) +
+    scale_x_continuous(breaks = seq(6, 12, 1)) +
+    coord_cartesian(expand = FALSE, clip = "off") +
+    theme_void() + do_theme()
+}
