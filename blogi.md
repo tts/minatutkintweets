@@ -18,15 +18,19 @@ output:
 
 Kuukausi sitten, syyskuun alussa 2021, Twitterin aihetunniste *minätutkin* oli suosittu. Itä-Suomen yliopiston akateeminen rehtori Tapio Määttä [sysäsi ajatuksen liikkeelle](https://twitter.com/tapiomaatta/status/1434449463268057092), ja pian mukaan liitettiin sopiva aihetunniste. Tutkijat innostuivat tiivistämään työnsä twiitin merkkimäärään, ja suuri yleisö innostui yhtä lailla lukemastaan. Vaikka Suomesta löytyy ajantasaisia sivustoja kotimaisesta tutkimuksesta, uusimpana [tutkimustietovaranto](https://www.tiedejatutkimus.fi/fi/), niiden varsinainen fokus ei ole tehdä tiedettä helposti lähestyttäväksi. Toki ne saattavat onnistua siinäkin, mutta vain välillisesti.
 
-Mistä sitten twiitattiin? Mitä olivat ne tieteenalat, joiden tutkijat ehtivät tai kiinnostuivat twiittaamaan? Millä termeillä aloja kuvattiin? 
+Mistä sitten twiitattiin? Mitä olivat ne tieteenalat, joiden tutkijat ehtivät tai kiinnostuivat twiittaamaan? 
 
-Päätin tehdä pienimuotoisen testin siitä, miten Kansalliskirjaston [Finto AI -rajapintapalvelu](https://www.kiwi.fi/display/Finto/Finto+AI%3An+rajapintapalvelu) palvelisi twiittien automaattisessa asiasanoituksessa. Heti alkuun on muistutettava siitä, että Finto AI on toistaiseksi pelkkä suosittelija; ihmisen on tarkoitus tehdä lopulliset asiasanavalinnat. Näin toimitaan mm. Jyväskylän yliopistossa, jossa opiskelijat asiasanoittavat opinnäytteensä Finto API:lla, valitsevat ehdotuksista sopivat (tai muokkaavat niitä), ja lopuksi kirjastonhoitaja hyväksyy ne. Tässä harjoituksessa annan kuitenkin mennä täysautomaatilla, kädet poissa ratilta. 
+Päätin tehdä pienimuotoisen testin siitä, miten Kansalliskirjaston [Finto AI -rajapintapalvelu](https://www.kiwi.fi/display/Finto/Finto+AI%3An+rajapintapalvelu) palvelisi twiittien automaattisessa asiasanoituksessa. Heti alkuun pitää painottaa siitä, että Finto AI/Annif on toistaiseksi pelkkä suosittelija; ihmisen on tarkoitus tehdä lopulliset asiasanavalinnat. Näin toimitaan mm. Jyväskylän yliopiston JYX-julkaisuarkistossa, jossa palvelua käytetään [opinnäytetöiden kuvailun apuna](https://www.kiwi.fi/display/Finto/Finto+AI%3An+rajapintapalvelu):
 
-(Alla olevat koodit ovat [Github-repossa](https://github.com/tts/minatutkintweets).)
+>Opinnäytetyönsä järjestelmään jättävä opiskelija saa nähtäväkseen Annifin ehdottamat asiasanat, joita hän voi halutessaan muokata. Lopulliset asiasanat hyväksyy kirjastovirkailija tarkistuksen jälkeen. Myös Kirjavälitys Oy käyttää rajapintapalvelua tuottaessaan ennakkotietoja tulevista kirjajulkaisuista. Vastaavanlaista käyttöä pilotoidaan tällä hetkellä mm. Vaasan yliopiston Osuva-julkaisuarkistossa.
+
+Tässä harjoituksessa annan kuitenkin mennä täysautomaatilla, kädet poissa ratilta. 
+
+Alla olevat koodit ovat [Github-repossa](https://github.com/tts/minatutkintweets).
 
 ### Twiittien haku ja siivous
 
-Kun haluaa kerätä lähipäivien twiittejä ilman erityistoimenpiteitä, on oltava nopea. Vaikka #minätutkin-häntää on näkynyt aina näihin päiviin asti, hain tässä käsitellyt twiitit jo sunnuntaina 12.9. alkuiltapäivästä enkä sen jälkeen enää uudistanut hakua. Piikki osui välille tiistai-torstai 7-9.9.
+Kun haluaa kerätä twiittejä ilman erityisjärjestelyjä, on oltava nopea. Vaikka #minätutkin-häntää on näkynyt aina näihin päiviin asti, hain tässä käsitellyt twiitit jo sunnuntaina 12.9. alkuiltapäivästä enkä sen jälkeen enää uudistanut hakua. Piikki osui välille tiistai-torstai 7-9.9.
 
 Harto Pöngän [10.9 keräämien tilastojen mukaan](https://twitter.com/hponka/status/1436240568045158402) 5000 kappaletta vaikutti sopivalta ylärajalta. Ei uudelleentwiittauksia.
 
@@ -38,7 +42,7 @@ tweets <- search_tweets(q, n = 5000, include_rts = FALSE)
 
 Siivous on enimmäkseen käsityötä. Aivan aluksi poistin selkeimpiä trollauksia, lukijoiden kiittäviä postauksia ja muita tässä yhteydessä epärelevantteja. Myöhemmin kävin vielä twiitit kertaalleen läpi ja filtteröin pois ne, jotka eivät olleet tutkijoilta itseltään vaan suurelta yleisöltä, tutkimusorganisaatiolta tai rahoittajalta. En edes pyrkinyt täydelliseen siivoukseen, ja lisäksi twiiteissä oli rajatapauksia. 
 
-Osa tutkijoista postitti useita #minätutkin-twiittejä. Joiltakin oli unohtunut ensimmäisestä aihetunniste - jolloin se ei siis tarttunut haaviini - jotkut halusivat täydentää, eräät taas jatkoivat aiheen parissa muulla tavoin, innostaen kolleegoita tulemaan mukaan jne. Yhdistin nämä kaikki jatkokäsittelyä varten. Jälkiviisastellen olisi ollut parasta päätellä näistä "päätwiitti" (ehkä ajallisesti ensimmäinen), jotta yleiskielen määrä olisi pysynyt minimissä. Muuntelu oli kuitenkin niin suurta ettei maksanut vaivaa.
+Osa tutkijoista postitti useita #minätutkin-twiittejä. Joiltakin oli unohtunut ensimmäisestä aihetunniste - jolloin se ei siis tarttunut haaviini - jotkut halusivat täydentää, eräät taas jatkoivat aiheen parissa muulla tavoin, innostaen kolleegoita tulemaan mukaan jne. Yhdistin ne kaikki. 
 
 Tämän osuuden koodi on tiedostossa [gettweets.R](https://github.com/tts/minatutkintweets/blob/main/gettweets.R)
 
@@ -60,7 +64,7 @@ Kaikkien twiittien asiasanoitus tarkoittaa toistuvaa rajapinnan kutsua. Finto AI
 
 Kutsuihin ja tulosten parsimiseen lainasin ison osan vastaavasta koodista [roadoi'lta](https://github.com/ropensci/roadoi), joka on yksi [rOpenSci-yhteisön](https://ropensci.org/) piirissä ylläpidettävistä lukuisista kirjastoista. Minulla oli ilo olla mukana `roadoi`'n [review-prosessissa](https://github.com/ropensci/software-review/issues/115). Siinä keskityin toiminnallisuuteen ja opasteisiin, nyt hyödynsin kirjastoa ensimmäistä kerran kooditasolla. Kysyin Najko Jahnilta, [mihin hän asettaisi paussin](https://github.com/ropensci/roadoi/issues/33). Najko ehdotti, että vaihtaisin `httr`:n tilalle kirjaston [httr2](https://httr2.r-lib.org/). Tutustumisen paikka. Samoin se, miten vaihtaa `plyr::llply` modernimpaan `purrr::map*`-funktioperheeseen, jotta toisteisuus omassa koodissani vähenisi.
 
-Mitä Finto AI ehdotti? Sen näkee twiittikohtaisesti tästä  [apurista](https://ttso.shinyapps.io/minatutkintweets/). Valitse ensin päivä ja tunti, ja lopuksi yksi tuon tunnin aikana postitetuista twiiteistä. Kokeile myös vaihtaa palautettavien asiasanojen lukumäärää - ja klikkaa Hae!-nappia. Tulos palautuu muutamassa sekunnissa. Tässä omassa harjoitelmassani käytin kolmea asiasanaa, eikä kynnysarvoa ollut. Finto AI tarjoaa minkä tahansa omavalintaisen tekstin asiasanoitukselle [tämän sivun](https://ai.finto.fi/).
+Mitä Finto AI ehdotti? Sen näkee twiittikohtaisesti tästä tekemästäni [apurista](https://ttso.shinyapps.io/minatutkintweets/). Valitse ensin päivä ja tunti, ja lopuksi yksi tuon tunnin aikana postitetuista twiiteistä. Kokeile myös vaihtaa palautettavien asiasanojen lukumäärää - ja klikkaa Hae!-nappia. Tulos palautuu muutamassa sekunnissa. Tässä omassa harjoitelmassani käytin kolmea asiasanaa, eikä kynnysarvoa ollut. Finto AI tarjoaa minkä tahansa omavalintaisen tekstin asiasanoitukselle [tämän sivun](https://ai.finto.fi/).
 
 Asiasanoituksen koodi on tiedostossa [finto_ai_keywording.R](https://github.com/tts/minatutkintweets/blob/main/finto_ai_keywording.R) ja interaktiivisen [Shiny](https://github.com/rstudio/shiny)-sovelluksen tiedostossa [app.R](https://github.com/tts/minatutkintweets/blob/main/app.R)
 
@@ -82,39 +86,29 @@ Tämän osuuden koodi on tiedostossa [finto_ontology.R](https://github.com/tts/m
 
 Olen seurannut R-ekosysteemin viikottaista [#tidytuesday](https://github.com/rfordatascience/tidytuesday)-tapahtumaa. Viikolla 37 julkaistu datasetti käsitteli USA:n [Billboard Top 100](https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-09-14/readme.md) -listaa. Sen visualisoinneista huomio kiinnittyi Georgios Karamanisin näyttävään [toteutukseen](https://github.com/gkaramanis/tidytuesday/tree/master/2021/2021-week37), jossa vaaka-akselilla on vuosi ja pystyakselilla jaettu pylväsgraafi musiikkityylien suhteellisista osuuksista kunakin vuonna. Otin hänen `ggplot2`-koodistaan mallia.
 
-Karamanisilla musiikkityylit ovat nimen mukaisessa aakkosjärjestyksessä, suuruuserot käyvät ilmi kirjasimen koosta. #minätutkin-esitykseen halusin sen sijaan käsiteryhmät päällekkäin suurimmasta pienimpään, mielellään niin että samalla käsiteryhmällä on aina sama väri. Ollaan faktoreiden (factor) järjestelyn alueella.
-
-Lopputuloksessa on parantamisen varaa, sillä [löytämäni keino](https://stackoverflow.com/a/53598064) ei toimi, kun ryhmiä on enemmän kuin 30. Faktoreissa riittää opiskeltavaa.
-
-# ![kuva1](/post/yyyy-mm-dd-mina-tutkin.fi_files/kuva1.png)
-# *Kuvateksti.*
+Karamanisilla musiikkityylit ovat nimen mukaisessa aakkosjärjestyksessä, suuruuserot käyvät ilmi kirjasimen koosta. #minätutkin-esitykseen halusin sen sijaan käsiteryhmät päällekkäin suurimmasta pienimpään, mielellään niin että samalla käsiteryhmällä on aina sama väri. Ollaan faktoreiden (factor) järjestelyn alueella. Lopputuloksessa on runsaasti parantamisen varaa, sillä [löytämäni keino](https://stackoverflow.com/a/53598064) ei toimi, kun ryhmiä on enemmän kuin 30. Jouduin siis rajaamaan niiden lukumäärää keinotekoisesti.
 
 ![minatutkintweets](minatutkintweets.png)
 *Twiittien aiheet 7-11.9*
 
-Koska jouduin siivilöimään osan ryhmistä pois, tein vielä erikseen pylväsgraafit jokaisesta päivästä erikseen ja yhdistin samaan kuvaan. Tässä ei päiviä voi varsinaisesti vertailla keskenään ja väriskaala on päiväkohtainen, mutta kuva antanee kuitenkin osviittaa. Jotta ero edelliseen kuvaan olisi tarpeeksi selvä, valitsin jälkimmäiseen `viridis`-kirjaston [värikartoista](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html#the-color-scales) vaihtoehdon `cividis`.
+Koska ensimmäinen ja viimeinen keräyspäivä tipahtivat pois, tein vielä erikseen pylväsgraafit jokaisesta päivästä erikseen ja yhdistin samaan kuvaan. Siinä ei päiviä voi varsinaisesti vertailla keskenään ja väriskaala on päiväkohtainen, mutta kuva antaa kuitenkin osviittaa. Jotta pesäero ensimmäiseen kuvaan olisi mahdollisimman selvä, valitsin jälkimmäiseen `viridis`-kirjaston [värikartoista](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html#the-color-scales) vaihtoehdon `cividis`. Ensimmäisessä se on `turbo`, Karamanisia mukaillen.
 
 ![minatutkintweets_byday](minatutkintweets_byday.png)
 *Twiittien aiheet per päivä*
 
-### Lopuksi (DRAFT)
+Visualisoinnin koodi on tiedostossa [viz.R](https://github.com/tts/minatutkintweets/blob/main/viz.R) ja visualisoitu data tiedostossa [day_group_n.csv](https://github.com/tts/minatutkintweets/blob/main/day_group_n.csv).
 
-Ryhmän *Yleistermit* suuruus ei yllätä. Ensinnäkin moni yleisluontoinen asiasana kuuluu siihen, ja varsinkin ihmis- ja yhteiskuntatieteissä abstraktiotaso on korkea. YSO näyttäkin käyttävän sitä eräänlaisena vähimmäisryhmänä. Esimerkiksi [hyvinvointi](https://finto.fi/yso/fi/page/p1947) kuuluu sekä ryhmiin Yleistermit, Sosiaalipolitiikka että Taloustieteet. Ja onhan se niin, ettei *hyvinvointi* kuvaile pelkästään selkeärajaisia ilmiöitä. 
+### Lopuksi
 
-Yleistermiyttä kasvattaa myös lähettäjän monisanaisuus monen twiitin muodossa, kuten aikaisemmin oli puhetta. Ideaalimaailmassa olisin jättänyt pois ylimääräiset, tässä en. 
+Alla kirjaamiini päätelmiin pitää suhtautua med en nypa salt. Finto AI ei suinkaan asiasanoita virheettä eikä sen ole nykymuodossa tarkoituskaan, se **ehdottaa**. 
 
-[Ryhmän selailu](https://finto.fi/yso/fi/page/p26556) paljastaa, että yleistermeillä saattaa olla hiukan myös kaatoluokan roolia, mille sillekin on toki oltava paikkansa. Ja totta kai virheitäkin esiintyy. Esimerkiksi [kärpäslätkät](https://finto.fi/yso/fi/page/p26010) yleisterminä taitaa olla bugi. Oli miten oli, YSO on mainio ponnahduslauta filosofisiin pohdiskeluihin todellisuuden luonteesta! 
+Ryhmän *Yleistermit* suuruus ei yllätä. Ensinnäkin moni yleisluontoinen asiasana kuuluu siihen luonnostaan. Erityisesti ihmistieteissä abstraktiotaso on maallikon silmin korkea, ja #minätutkin-twiittajissa oli runsaasti näiden tieteenalojen edustajia. STEM-tutkijoita (science, technology, engineering and mathematics) oli mukana harvakseltaan, ainakin näinä #minätutkin-ajan alkupäivinä. 
 
-[Väestötiede](https://finto.fi/ykl/fi/page/31.5) sisältää laajan joukon asiasanoja, jotka liittyvät perhepolitiikkaan, aluesuunnitteluun, maahanmuuttoon ja siirtolaisuuteen. 
+YSO näyttää myös käyttävän usein Yleistermit-ryhmää tietynlaisena vähimmäisvaatimuksena. Esimerkiksi [hyvinvointi](https://finto.fi/yso/fi/page/p1947) kuuluu sekä ryhmään Yleistermit että ryhmiin Sosiaalipolitiikka ja Taloustieteet. Ja onhan se niin, ettei *hyvinvointia* voi tyhjentävästi lokeroidakaan. 
+Yleistermiyttä kasvattavat lisäksi lähettäjän useammat #minätutkin-twiitit, jotka yhdistin. Olisi ehkä kannattanut yrittää päätellä ensisijainen ja jättää muut huomiotta, jotta yleiskielen määrä olisi pysynyt minimissä. Muuntelu oli kuitenkin niin suurta, etten edes harkinnut. Olisiko ajallisesti ensimmäinen ollut useimmiten pätevä?
 
-Hyvin pienet erot määrissä isoimpien ryhmien kesken.
+Toinen suuri ryhmä [Väestötiede](https://finto.fi/ykl/fi/page/31.5) sisältää asiasanoja, jotka liittyvät perhepolitiikkaan, aluesuunnitteluun, maahanmuuttoon ja siirtolaisuuteen. 
 
-Käytöstä poistetut asiasanat deletoin, ts. en seurannut linkitystä siihen, jota pitäisi nyt käyttää. Näitä oli alle viisi. Samoin paikannimet, koska niille on oma [sanastonsa](http://finto.fi/yso-paikat/fi/). Yksinkertaistin.
+Vaikka pylväsgraafit pakottavatkin ryhmät tiettyyn järjestykseen, pelkkä vilkaisu kertoo, että suhteelliset erot ovat sittenkin pieniä yleisimpien ryhmien välillä. Kiinnostavasti *klimatologia* oli ensimmäisen päivän ykkösenä, mutta jäi sen jälkeen isompien jalkoihin. *Historia* taas oli tasaisesti suurimpien joukossa kaikkina päivinä.
 
-Kokeilin myös NLP-käsittelyä: stopwords, tokenization, lemmatization. Lopputulos ei ollut kovin hyvää, ja sitäpaitsi siivottavaa oli aivan liikaa (kävin läpi n=>2, mutta valtaosa on n=1). Sen verran mitä aiheesta olen lukenut, lemmatizationin state-of-the-art -kirjasto löytyy Pythonista. RStudio IDE:stä voi kyllä ajaa Python-koodia reticulate-kirjaston avulla (kokeiltu on), mutta koska luovutin NLP:n, en lähtenyt tällekään tielle.
-
-Jos Twitteristä haluaa hakea pidemmältä aikaväliltä, kannattaa viritellä esim. Martin Hawkseyn Google Sheets -pohjainen palvelu TAGS.
-
-Twitterin käyttö arkisena kommunikointivälineenä ei ole tasaisesti jakautunut kaikille tieteenaloille, ei Suomessa eikä muualla. 
-
-Finto AI on nyt jo lupaava ehdotusautomaatti, jolle toivoo pitkää ikää.
+Finto AI on lupaava ehdotuspalvelu, jolle toivoo pitkää ikää. Tarkkuus ja automaatio varmasti lisääntyvät ajan myötä.
