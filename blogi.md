@@ -26,7 +26,7 @@ Päätin tehdä pienimuotoisen testin siitä, miten Kansalliskirjaston [Finto AI
 
 ### Twiittien haku ja siivous
 
-Kuten tunnettua, on toimittava nopeasti, jos haluaa kerätä twiittejä ilman erityistoimenpiteitä. Vaikka #minätutkin-häntää on näkynyt aina näihin päiviin asti, hain tässä käsitellyt twiitit jo sunnuntaina 12.9. alkuiltapäivästä enkä sen jälkeen enää uudistanut hakua. Piikki osui välille tiistai-torstai 7-9.9.
+Kun haluaa kerätä lähipäivien twiittejä ilman erityistoimenpiteitä, on oltava nopea. Vaikka #minätutkin-häntää on näkynyt aina näihin päiviin asti, hain tässä käsitellyt twiitit jo sunnuntaina 12.9. alkuiltapäivästä enkä sen jälkeen enää uudistanut hakua. Piikki osui välille tiistai-torstai 7-9.9.
 
 Harto Pöngän [10.9 keräämien tilastojen mukaan](https://twitter.com/hponka/status/1436240568045158402) 5000 kappaletta vaikutti sopivalta ylärajalta. Ei uudelleentwiittauksia.
 
@@ -36,7 +36,7 @@ q <- "#minätutkin"
 tweets <- search_tweets(q, n = 5000, include_rts = FALSE)
 ```
 
-Twiittien siivous on käsityötä. Aivan aluksi poistin selkeimpiä trollauksia, lukijoiden kiittäviä postauksia ja muita tässä yhteydessä epärelevantteja. Myöhemmin kävin vielä twiitit kertaalleen läpi ja filtteröin pois ne, jotka eivät olleet tutkijoilta itseltään vaan suurelta yleisöltä, tutkimusorganisaatiolta tai rahoittajalta. En edes pyrkinyt täydelliseen siivoukseen, ja lisäksi twiiteissä oli rajatapauksia. 
+Siivous on enimmäkseen käsityötä. Aivan aluksi poistin selkeimpiä trollauksia, lukijoiden kiittäviä postauksia ja muita tässä yhteydessä epärelevantteja. Myöhemmin kävin vielä twiitit kertaalleen läpi ja filtteröin pois ne, jotka eivät olleet tutkijoilta itseltään vaan suurelta yleisöltä, tutkimusorganisaatiolta tai rahoittajalta. En edes pyrkinyt täydelliseen siivoukseen, ja lisäksi twiiteissä oli rajatapauksia. 
 
 Osa tutkijoista postitti useita #minätutkin-twiittejä. Joiltakin oli unohtunut ensimmäisestä aihetunniste - jolloin se ei siis tarttunut haaviini - jotkut halusivat täydentää, eräät taas jatkoivat aiheen parissa muulla tavoin, innostaen kolleegoita tulemaan mukaan jne. Yhdistin nämä kaikki jatkokäsittelyä varten. Jälkiviisastellen olisi ollut parasta päätellä näistä "päätwiitti" (ehkä ajallisesti ensimmäinen), jotta yleiskielen määrä olisi pysynyt minimissä. Muuntelu oli kuitenkin niin suurta ettei maksanut vaivaa.
 
@@ -46,7 +46,7 @@ Tämän osuuden koodi on tiedostossa [gettweets.R](https://github.com/tts/minatu
 
 Finto AI -rajapintapalvelulle lähetetään asiasanoitettava teksti HTTP POST -kutsussa. Palautettavien asiasanojen lukumäärää voi säätää (limit), samoin niiden osumistarkkuuden kynnysarvoa (threshold). URL:ssa on oltava tieto projektista eli siitä, minkä kielisestä tekstistä on kyse. Palvelun ohjeistus on interaktiivinen [Swagger-hiekkalaatikko](https://ai.finto.fi/v1/ui/).
 
-En tiedä, kuinka luotettava Twitterin palauttama `lang`-arvo on, mutta joka tapauksessa käytin sitä. Satunnaisotannalla arvo näytti olevan oikeassa. Toinen asia on sitten se, että jotkut twiittaajat käyttävät twiiteissään kahta kieltä. Ei-englantilaiselle käyttäjälle, jolla on myös englanninkielisiä seuraajia, kieli onkin päänvaiva. Yksi mahdollisuus on ylläpitää kahta erikielistä tiliä, mutta kankeaa sekin on. Twitter tarjoaa lukijalle automaattista käännösapua, mikä toimii aika mukavasti, mutta yhtä kaikki kieli ei suinkaan ole ihan pikkujuttu.
+En tiedä, kuinka luotettava Twitterin palauttama `lang`-arvo on, mutta joka tapauksessa käytin sitä. Satunnaisotannalla se näytti olevan oikeassa. Kieli ei kuitenkaan ole yksiselitteinen asia, sillä eräät twiittaajat käyttävät twiiteissään kahta kieltä. Ei-englanninkieliselle Twitter-käyttäjälle, jolla on myös englanninkielisiä seuraajia, kieli onkin päänvaiva. Yksi mahdollisuus on ylläpitää kahta erikielistä tiliä, mutta se on kankeaa. Twitter tarjoaa lukijalle automaattista käännösapua, mikä toimiikin aika mukavasti, mutta yhtä kaikki kieli ei suinkaan ole pikkujuttu.
 
 
 ```
@@ -66,9 +66,9 @@ resp <- httr::RETRY(verb = "POST",
 
 Kaikkien twiittien asiasanoitus tarkoittaa toistuvaa rajapinnan kutsua. Finto AI:n käyttöohjeissa toivotaan, ettei rajapintaa pommitettaisi samanaikaisilla kutsuilla, mikä on ymmärrettävää. Rajapinta on toistaiseksi täysin avoin, mitään rekisteröintiä ei ole. Otin yhteyttä Finton asiakaspalveluosoitteeseen, kun aloin epäillä koodini aiheuttavan ongelmia. Yritin näet lisätä kutsujen väliin `Sys.sleep()` -kutsun, mutta en onnistunut löytämään sille toimivaa koloa; kutsut palauttivat tyhjää. Finton vastaus oli rauhoittava: he eivät olleet huomanneet palvelussa mitään epänormaalia kuormitusta.
 
-Kutsuihin ja tulosten parsimiseen lainasin ison osan vastaavasta koodista [roadoi](https://github.com/ropensci/roadoi)-kirjastolta, joka on osa [rOpenSci-yhteisön](https://ropensci.org/) piirissä ylläpidettävistä monista työkaluista. Minulla oli ilo olla mukana `roadoi`n [review-prosessissa](https://github.com/ropensci/software-review/issues/115). Siinä keskityin toiminnallisuuteen ja opasteisiin, nyt hyödynsin kirjastoa ensimmäistä kerran kooditasolla. Kysyin Najko Jahnilta, [mihin hän asettaisi paussin](https://github.com/ropensci/roadoi/issues/33). Najko ehdotti, että vaihtaisin `httr`:n tilalle kirjaston [httr2](https://httr2.r-lib.org/). Tutustumisen paikka. Samoin se, miten vaihtaa `plyr::llply` modernimpaan `purrr::map*`-funktioperheeseen, jotta toisteisuus omassa koodissani vähenisi.
+Kutsuihin ja tulosten parsimiseen lainasin ison osan vastaavasta koodista [roadoi'lta](https://github.com/ropensci/roadoi), joka on yksi [rOpenSci-yhteisön](https://ropensci.org/) piirissä ylläpidettävistä lukuisista kirjastoista. Minulla oli ilo olla mukana `roadoi`'n [review-prosessissa](https://github.com/ropensci/software-review/issues/115). Siinä keskityin toiminnallisuuteen ja opasteisiin, nyt hyödynsin kirjastoa ensimmäistä kerran kooditasolla. Kysyin Najko Jahnilta, [mihin hän asettaisi paussin](https://github.com/ropensci/roadoi/issues/33). Najko ehdotti, että vaihtaisin `httr`:n tilalle kirjaston [httr2](https://httr2.r-lib.org/). Tutustumisen paikka. Samoin se, miten vaihtaa `plyr::llply` modernimpaan `purrr::map*`-funktioperheeseen, jotta toisteisuus omassa koodissani vähenisi.
 
-Mitä Finto AI ehdotti? Sen näkee twiittikohtaisesti tästä pienestä [apupalvelusta](https://ttso.shinyapps.io/minatutkintweets/). Valitse ensin päivä ja tunti, ja sen jälkeen yksi tuon tunnin aikana postitetuista twiiteistä. Kokeile myös vaihtaa palautettavien asiasanojen lukumäärää - ja klikkaa Hae!-nappia. Tulos palautuu muutamassa sekunnissa. Tässä omassa harjoitelmassani käytin kolmea asiasanaa, eikä kynnysarvoa ollut. Finto AI tarjoaa minkä tahansa omavalintaisen tekstin asiasanoitukselle [tämän sivun](https://ai.finto.fi/).
+Mitä Finto AI ehdotti? Sen näkee twiittikohtaisesti tästä  [apurista](https://ttso.shinyapps.io/minatutkintweets/). Valitse ensin päivä ja tunti, ja lopuksi yksi tuon tunnin aikana postitetuista twiiteistä. Kokeile myös vaihtaa palautettavien asiasanojen lukumäärää - ja klikkaa Hae!-nappia. Tulos palautuu muutamassa sekunnissa. Tässä omassa harjoitelmassani käytin kolmea asiasanaa, eikä kynnysarvoa ollut. Finto AI tarjoaa minkä tahansa omavalintaisen tekstin asiasanoitukselle [tämän sivun](https://ai.finto.fi/).
 
 Asiasanoituksen koodi on tiedostossa [finto_ai_keywording.R](https://github.com/tts/minatutkintweets/blob/main/finto_ai_keywording.R) ja interaktiivisen [Shiny](https://github.com/rstudio/shiny)-sovelluksen tiedostossa [app.R](https://github.com/tts/minatutkintweets/blob/main/app.R)
 
@@ -98,16 +98,20 @@ Lopputuloksessa on parantamisen varaa, sillä [löytämäni keino](https://stack
 # *Kuvateksti.*
 
 ![minatutkintweets](minatutkintweets.png)
-*Twiittien aiheet 6-12.9*
+*Twiittien aiheet 7-11.9*
 
-Koska jouduin siivilöimään osan ryhmistä pois, tein vielä erikseen pylväsgraafit jokaisesta päivästä erikseen ja yhdistin samaan kuvaan. Tässä ei päiviä voi varsinaisesti vertailla keskenään ja väriskaala on päiväkohtainen, mutta kuva antaa kuitenkin osviittaa.
+Koska jouduin siivilöimään osan ryhmistä pois, tein vielä erikseen pylväsgraafit jokaisesta päivästä erikseen ja yhdistin samaan kuvaan. Tässä ei päiviä voi varsinaisesti vertailla keskenään ja väriskaala on päiväkohtainen, mutta kuva antanee kuitenkin osviittaa. Jotta ero edelliseen kuvaan tulisi selvemmäksi, valitsin tähän jälkimmäiseen `viridis`-kirjaston [värikartoista](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html#the-color-scales) vaihtoehdon `cividis`.
 
 ![minatutkintweets_byday](minatutkintweets_byday.png)
-*Twiittien aihe per päivä*
+*Twiittien aiheet per päivä*
 
 
-### Lopuksi
+### Lopuksi (DRAFT)
 
-para
+Yleistermien määrä on suuri, mihin vaikuttaa osaltaan tuo mainittu twiittien yhdistely per lähettäjä. Ehkä myös geneerisyys/abstraktius tekstissä. Väestötiede selittynee ainakin asiasanoilla ihminen, aikuinen, lapsi jne. Hyvin pienet erot määrissä isoimpien ryhmien kesken.
 
-para
+Käytöstä poistetut asiasanat deletoin, ts. en seurannut linkitystä siihen, jota pitäisi nyt käyttää. Näitä oli alle viisi. Samoin paikannimet, koska niille on oma Finto-sanastonsa. Vältin monimutkaisuutta.
+
+Kokeilin myös NLP-käsittelyä: stopwords, tokenization, lemmatization. Lopputulos ei kovin hyvää, ja sitäpaitsi aivan liikaa siivottavaa (kävin läpi n=>2, mutta valtaosa on n=1). Sen verran mitä aiheesta olen lukenut, lemmatizationin state-of-the-art -kirjasto löytyy Pythonista. RStudio IDE:stä voi ajaa Python-koodia reticulate-kirjaston avulla (kokeiltu on), mutta koska luovutin NLP:n, en lähtenyt tällekään tielle.
+
+Jos Twitteristä haluaa hakea pidemmältä aikaväliltä, kannattaa viritellä esim. Martin Hawkseyn Google Sheets -pohjainen palvelu TAGS.
