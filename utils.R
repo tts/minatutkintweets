@@ -169,7 +169,7 @@ do_g <- function(data) {
   ggplot(data = data, aes(x = day, y = n, fill = fct_reorder(group, n))) +
     geom_bar(stat = "identity", position = "fill", width = 1) +
     geom_text(aes(label = group, size = n), position = position_fill(vjust = 0.5), check_overlap = TRUE, color = "grey10") +
-    scale_fill_viridis_d(option = "cividis") +
+    scale_fill_viridis_d(option = "cividis", begin = 0.05, end = 0.95) +
     scale_size_continuous(range = c(2, 5)) +
     scale_x_continuous(breaks = seq(6, 12, 1)) +
     coord_cartesian(expand = FALSE, clip = "off") +
