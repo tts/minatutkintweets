@@ -5,16 +5,24 @@ library(httr)
 
 data <- read_csv("cleaned_tweets_by_user.csv")
 
+data <- data %>% 
+  filter(!is.na(alltext))
+
 ui <- fluidPage(
   
   title = "#minätutkin-twiitit",
   
   titlePanel("Finto AI ehdottaa asiasanoja #minätutkin-twiitille"),
   
+  br(),
+  
   fluidRow(
     column(10,
            tags$div(class="header", checked = NA,
                     tags$a(href="https://github.com/tts/minatutkintweets", "Ks. GitHub")))),
+  
+  br(),
+  
   fluidRow(
     column(1,
            selectInput(inputId = "day",
@@ -22,13 +30,29 @@ ui <- fluidPage(
                        choices = sort(unique(day(data$created_at))),
                        multiple = FALSE,
                        selected = NULL)),
-    column(11,
+    column(1,
+           selectInput(inputId = "hour",
+                       label = "Tunti",
+                       choices = NULL,
+                       multiple = FALSE,
+                       selected = NULL)),
+    column(10,
             selectizeInput(inputId = "tw",
-                        label = "Twiitti",
+                        label = "Twiitit",
                         choices = NULL,
                         multiple = FALSE,
                         selected = NULL,
                         width = "100%"))),
+  
+  br(),
+  
+  fluidRow(
+    column(12,
+           plotOutput("timeline", height = "100px")
+    )),
+  
+  br(),
+  
   fluidRow(
     column(2,
            sliderInput(inputId = "nr",
@@ -36,20 +60,14 @@ ui <- fluidPage(
                        min = 1,
                        max = 10,
                        value = 3,
-                       step = 1)),
-    # column(2,
-    #        sliderInput(inputId = "thr",
-    #                    label = "Osuvuus",
-    #                    min = 0.05,
-    #                    max = 1,
-    #                    value = 0.1,
-    #                    step = 0.1))
-  ),
+                       step = 1))),
   fluidRow(
     column(1,
           actionButton("do", "Hae!"),
-    )
-  ),
+    )),
+  
+  br(),
+  
   fluidRow(
     column(8,
            tableOutput("kw"))
@@ -63,18 +81,47 @@ server <- function(input, output, session) {
   day_selected <- reactive({
       data %>% filter(day(created_at) == input$day)
   })
-
-  # Update the list of selectable tweets based on the day
+  
+  # Update the list of selectable hours of the day, and plot statistics
   observeEvent(day_selected(), {
-    choices <- day_selected()$alltext
-    updateSelectizeInput(session, inputId = 'tw', choices = choices, server = TRUE)
+    choices_h <- sort(hour(day_selected()$created_at))
+    updateSelectizeInput(session, inputId = 'hour', choices = choices_h, server = TRUE)
+    thisday <- day(day_selected()$created_at)
+    
+    day_p <- day_selected() %>% 
+      group_by(hour(created_at)) %>% 
+      summarise(n = n()) %>% 
+      rename(hour = `hour(created_at)`) %>% 
+      ggplot() + geom_line(aes(x = hour, y = n), 
+                           color = "#09557f", alpha = 0.6, size = 0.6) +
+      scale_x_continuous(breaks = c(0:24)) +
+      labs(
+        title = paste0("Twiittien määrä tunneittain ", thisday, ".9.2021")
+      ) +
+      theme(axis.title.x = element_blank(), axis.title.y = element_blank())
+    
+    output$timeline <- renderPlot(day_p)
+    
+  })
+
+  # Filter tweets by day and hour
+  day_hour_selected <- reactive({
+    req(input$hour)
+    filter(day_selected(), hour(created_at) == input$hour)
+  })
+  
+  # Update the list of selectable tweets based on the day and hour
+  observeEvent(day_hour_selected(), {
+    choices_tw <- day_hour_selected()$alltext
+    updateSelectizeInput(session, inputId = 'tw', choices = choices_tw, server = TRUE)
     })
   
   # Filter tweets by text
   tw_selected <- reactive({
     req(input$tw)
-    filter(day_selected(), alltext == input$tw)
+    filter(day_hour_selected(), alltext == input$tw)
   })
+ 
   
   # When the button is clicked
   observeEvent(input$do, {
