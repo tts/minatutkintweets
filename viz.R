@@ -14,9 +14,8 @@ to_viz <- inner_join(kw, ts, by = c("uri"="uri")) %>%
          label = label.x) %>% 
   filter(!label %in% c("Suomi", "tutkimus", "artikkelit (julkaisut)", "minä", "research", "tiede",
                        "Finland", "tutkijat", "kehittäminen", "tutkimusmenetelmät", "menetelmät",
-                       "tutkimusryhmät", "tutkimustoiminta", "tutkimustyö", "Twitter", "väitöskirjat",
-                       "vaikutukset", "vaikuttavuus", "vaikuttaminen", "tiedeviestintä", "merkitys (tärkeys)", 
-                       "sosiaalinen media")) 
+                       "tutkimusryhmät", "tutkimustoiminta", "tutkimustyö", "väitöskirjat",
+                       "vaikutukset", "vaikuttavuus", "vaikuttaminen", "merkitys (tärkeys)")) 
 
 rm(kw)
 rm(ts)
@@ -39,6 +38,8 @@ to_viz <- to_viz_g %>%
   summarise(n = n()) %>% 
   ungroup()
 
+write_csv(to_viz, "day_group_n.csv")
+
 rm(to_viz_g)
 gc()
 
@@ -53,7 +54,7 @@ viz <- to_viz
 
 # https://stackoverflow.com/a/53598064
 viz <- arrange(viz, day, n) %>% 
- filter(n >= 400) %>% # graph coloring breaks when aux size > 30
+  filter(n >= 400) %>% # graph coloring breaks when aux size > 30
   mutate(group = factor(group)) 
 
 aux <- with(viz, match(sort(unique(group)), group))
