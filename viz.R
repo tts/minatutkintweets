@@ -62,7 +62,7 @@ q_colors <- length(aux)
 v_colors <- viridis::viridis(q_colors, option = "turbo", begin = 0.05, end = 0.95)
 
 # Modified from https://github.com/gkaramanis/tidytuesday/blob/master/2021/2021-week37/billboard.R
-g <- ggplot(data = viz, aes(x = day, y = n, fill = interaction(n, day))) +
+ggplot(data = viz, aes(x = day, y = n, fill = interaction(n, day))) +
   geom_bar(stat = "identity", position = "fill", width = 1) +
   geom_text(aes(label = group, size = n), position = position_fill(vjust = 0.5), check_overlap = TRUE, color = "grey10") +
   scale_fill_manual("Ryhmä", 
@@ -73,12 +73,11 @@ g <- ggplot(data = viz, aes(x = day, y = n, fill = interaction(n, day))) +
   scale_x_continuous(breaks = seq(6, 12, 1)) +
   coord_cartesian(expand = FALSE, clip = "off") +
   labs(
-    title = "#minätutkin 6-11.9.2021",
+    title = "#minätutkin 7-11.9.2021",
     subtitle = "Ryhmien suhteellinen osuus (n >= 400)",
-    caption = "Lähteet: Twitter, Finto AI, Finto API"
+    caption = "Lähteet: Twitter, Finto AI, Finto API. @ttso"
   ) +
   theme_void() + do_theme()
-g
 
 ggsave(
   "minatutkintweets.png",
@@ -107,9 +106,9 @@ d12 <- do_g(viz[viz$day == 12,])
 
 d6 + d7 + d8 + d9 + d10 + d11 + d12 + 
   plot_layout(ncol = 7) + 
-  plot_annotation(title = "#minätutkin2021 6-12.9.2021",
+  plot_annotation(title = "#minätutkin 6-12.9.2021",
                   subtitle = "Ryhmien suhteellinen osuus",
-                  caption = "Lähteet: Twitter, Finto AI, Finto API")
+                  caption = "Lähteet: Twitter, Finto AI, Finto API. @ttso")
 
 ggsave(
   "minatutkintweets_byday.png",
