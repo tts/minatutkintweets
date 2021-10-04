@@ -50,14 +50,6 @@ En tiedä, kuinka luotettava Twitterin palauttama `lang`-arvo on, mutta joka tap
 
 
 ```
-make_body <- function(tw){
-  list(
-    text = tw,
-    limit = 3
-  ) -> body
-  return(body)
-}
-
 resp <- httr::RETRY(verb = "POST",
                     url = paste0("https://ai.finto.fi/v1/projects/", project, "/suggest"),
                     body = make_body(tweet),
@@ -82,7 +74,7 @@ Miten erottaa twiittien vapaasta kielenkäytöstä tieteenala? Vaikeasti. Ilman 
 
 Vakavasti puhuen oma tavoitteeni oli saada aikaan visualisointi siitä, mistä aiheista suunnilleen twiitattiin ja mitkä niiden suhteet olivat päivittäin. Pelkkien asiasanojen käyttö ei tuntunut järkevältä. Niitä tulee liikaa. Olisin voinut pysyä tiukasti yhden asiasanan politiikassa per twiitti, jolloin kirjo olisi ollut pienempi, mutta siinä olisi luultavasti menetetty iso osa twiittien sisällöstä. Sitä paitsi ensimmäinen asiasana voi olla täydellinen huti.
 
-Finto-palvelu yllättää monipuolisuudellaan. En ihan heti ymmärtänyt, mitä kaikkea onkaan tarjolla. Tartuin ensimmäiseen löydökseen ja hain asiasanoille yhtä tasoa yleisemmän termin (broader term). Niitä parsiessa kävin vielä kerran läpi vaihtoehtoja ja kas, [Finto API:n](https://api.finto.fi/) sanastokohtaisista metodeista löytyi rajapinta [get_vocid_data](https://api.finto.fi/doc/#!/Vocabulary45specific32methods/get_vocid_data), joka palauttaa mm. asiasanan [käsiteryhmän](https://finto.fi/yso/fi/groups). Niitäkin on paljon, mutta huomattavan paljon vähemmän kuin erilaisia asiasanoja.
+Finto-palvelu yllättää monipuolisuudellaan. En ihan heti ymmärtänyt, mitä kaikkea onkaan tarjolla. Tartuin ensimmäiseen löydökseen ja hain asiasanoille yhtä tasoa yleisemmän termin (broader term). Niitä parsiessa kävin vielä kerran läpi vaihtoehtoja ja kas, [Finto API:n](https://api.finto.fi/) sanastokohtaisista metodeista löytyi rajapinta [get_vocid_data](https://api.finto.fi/doc/#!/Vocabulary45specific32methods/get_vocid_data), joka palauttaa mm. asiasanan [käsiteryhmän](https://finto.fi/yso/fi/groups), yhden tai useamman. Ryhmiäkin on paljon, mutta oleellisesti vähemmän kuin erilaisia asiasanoja.
 
 Tämän osuuden koodi on tiedostossa [finto_ontology.R](https://github.com/tts/minatutkintweets/blob/main/finto_ontology.R).
 
@@ -100,18 +92,29 @@ Lopputuloksessa on parantamisen varaa, sillä [löytämäni keino](https://stack
 ![minatutkintweets](minatutkintweets.png)
 *Twiittien aiheet 7-11.9*
 
-Koska jouduin siivilöimään osan ryhmistä pois, tein vielä erikseen pylväsgraafit jokaisesta päivästä erikseen ja yhdistin samaan kuvaan. Tässä ei päiviä voi varsinaisesti vertailla keskenään ja väriskaala on päiväkohtainen, mutta kuva antanee kuitenkin osviittaa. Jotta ero edelliseen kuvaan tulisi selvemmäksi, valitsin tähän jälkimmäiseen `viridis`-kirjaston [värikartoista](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html#the-color-scales) vaihtoehdon `cividis`.
+Koska jouduin siivilöimään osan ryhmistä pois, tein vielä erikseen pylväsgraafit jokaisesta päivästä erikseen ja yhdistin samaan kuvaan. Tässä ei päiviä voi varsinaisesti vertailla keskenään ja väriskaala on päiväkohtainen, mutta kuva antanee kuitenkin osviittaa. Jotta ero edelliseen kuvaan olisi tarpeeksi selvä, valitsin jälkimmäiseen `viridis`-kirjaston [värikartoista](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html#the-color-scales) vaihtoehdon `cividis`.
 
 ![minatutkintweets_byday](minatutkintweets_byday.png)
 *Twiittien aiheet per päivä*
 
-
 ### Lopuksi (DRAFT)
 
-Yleistermien määrä on suuri, mihin vaikuttaa osaltaan tuo mainittu twiittien yhdistely per lähettäjä. Ehkä myös geneerisyys/abstraktius tekstissä. Väestötiede selittynee ainakin asiasanoilla ihminen, aikuinen, lapsi jne. Hyvin pienet erot määrissä isoimpien ryhmien kesken.
+Ryhmän *Yleistermit* suuruus ei yllätä. Ensinnäkin moni yleisluontoinen asiasana kuuluu siihen, ja varsinkin ihmis- ja yhteiskuntatieteissä abstraktiotaso on korkea. YSO näyttäkin käyttävän sitä eräänlaisena vähimmäisryhmänä. Esimerkiksi [hyvinvointi](https://finto.fi/yso/fi/page/p1947) kuuluu sekä ryhmiin Yleistermit, Sosiaalipolitiikka että Taloustieteet. Ja onhan se niin, ettei *hyvinvointi* kuvaile pelkästään selkeärajaisia ilmiöitä. 
 
-Käytöstä poistetut asiasanat deletoin, ts. en seurannut linkitystä siihen, jota pitäisi nyt käyttää. Näitä oli alle viisi. Samoin paikannimet, koska niille on oma Finto-sanastonsa. Vältin monimutkaisuutta.
+Yleistermiyttä kasvattaa myös lähettäjän monisanaisuus monen twiitin muodossa, kuten aikaisemmin oli puhetta. Ideaalimaailmassa olisin jättänyt pois ylimääräiset, tässä en. 
 
-Kokeilin myös NLP-käsittelyä: stopwords, tokenization, lemmatization. Lopputulos ei kovin hyvää, ja sitäpaitsi aivan liikaa siivottavaa (kävin läpi n=>2, mutta valtaosa on n=1). Sen verran mitä aiheesta olen lukenut, lemmatizationin state-of-the-art -kirjasto löytyy Pythonista. RStudio IDE:stä voi ajaa Python-koodia reticulate-kirjaston avulla (kokeiltu on), mutta koska luovutin NLP:n, en lähtenyt tällekään tielle.
+[Ryhmän selailu](https://finto.fi/yso/fi/page/p26556) paljastaa, että yleistermeillä saattaa olla hiukan myös kaatoluokan roolia, mille sillekin on toki oltava paikkansa. Ja totta kai virheitäkin esiintyy. Esimerkiksi [kärpäslätkät](https://finto.fi/yso/fi/page/p26010) yleisterminä taitaa olla bugi. Oli miten oli, YSO on mainio ponnahduslauta filosofisiin pohdiskeluihin todellisuuden luonteesta! 
+
+[Väestötiede](https://finto.fi/ykl/fi/page/31.5) sisältää laajan joukon asiasanoja, jotka liittyvät perhepolitiikkaan, aluesuunnitteluun, maahanmuuttoon ja siirtolaisuuteen. 
+
+Hyvin pienet erot määrissä isoimpien ryhmien kesken.
+
+Käytöstä poistetut asiasanat deletoin, ts. en seurannut linkitystä siihen, jota pitäisi nyt käyttää. Näitä oli alle viisi. Samoin paikannimet, koska niille on oma [sanastonsa](http://finto.fi/yso-paikat/fi/). Yksinkertaistin.
+
+Kokeilin myös NLP-käsittelyä: stopwords, tokenization, lemmatization. Lopputulos ei ollut kovin hyvää, ja sitäpaitsi siivottavaa oli aivan liikaa (kävin läpi n=>2, mutta valtaosa on n=1). Sen verran mitä aiheesta olen lukenut, lemmatizationin state-of-the-art -kirjasto löytyy Pythonista. RStudio IDE:stä voi kyllä ajaa Python-koodia reticulate-kirjaston avulla (kokeiltu on), mutta koska luovutin NLP:n, en lähtenyt tällekään tielle.
 
 Jos Twitteristä haluaa hakea pidemmältä aikaväliltä, kannattaa viritellä esim. Martin Hawkseyn Google Sheets -pohjainen palvelu TAGS.
+
+Twitterin käyttö arkisena kommunikointivälineenä ei ole tasaisesti jakautunut kaikille tieteenaloille, ei Suomessa eikä muualla. 
+
+Finto AI on nyt jo lupaava ehdotusautomaatti, jolle toivoo pitkää ikää.
