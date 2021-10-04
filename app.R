@@ -92,11 +92,10 @@ server <- function(input, output, session) {
       group_by(hour(created_at)) %>% 
       summarise(n = n()) %>% 
       rename(hour = `hour(created_at)`) %>% 
-      ggplot() + geom_line(aes(x = hour, y = n), 
-                           color = "#09557f", alpha = 0.6, size = 0.6) +
+      ggplot() + geom_line(aes(x = hour, y = n), color = "#09557f", alpha = 0.6, size = 0.6) +
       scale_x_continuous(breaks = c(0:24)) +
       labs(
-        title = paste0("Twiittien määrä tunneittain ", thisday, ".9.2021")
+        title = paste0("Lukumäärä tunneittain ", thisday, ".9.2021")
       ) +
       theme(axis.title.x = element_blank(), axis.title.y = element_blank())
     
@@ -164,7 +163,7 @@ server <- function(input, output, session) {
     # API call
     req <- httr::RETRY(verb = "POST",
                         url = paste0("https://ai.finto.fi/v1/projects/", project, "/suggest"),
-                        body = list(text = tw_text, limit = input$nr, lang = tw_lang, threshold = input$thr),
+                        body = list(text = tw_text, limit = input$nr, lang = tw_lang),
                         user_agent("https://github.com/tts/minatutkintweets"))
     
     # Parse result to a tibble
