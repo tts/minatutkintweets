@@ -47,8 +47,8 @@ ui <- fluidPage(
   br(),
   
   fluidRow(
-    column(12,
-           plotOutput("timeline", height = "100px")
+    column(8,
+           plotOutput("timeline", height = "200px")
     )),
   
   br(),
