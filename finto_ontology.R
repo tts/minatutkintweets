@@ -99,6 +99,7 @@ out_fi_g_all <- rbind(out_fi_g, out_fi_p)
 
 write_csv(out_fi_g_all, "terms_groups_fi_3.csv")
 
+
 #  sv
 
 sv <- read_csv("terms_sv_3.cvs")
@@ -151,7 +152,12 @@ out_en_g_all <- rbind(out_en_g, out_en_p)
 
 write_csv(out_en_g_all, "terms_groups_en_3.csv")
 
+# Combine all langs
 all <- rbind(out_fi_g_all, out_sv_g_all, out_en_g_all)
+
+# Exclude 00 General terms (in all lang)
+all <- all %>% 
+  filter(!grepl("^00", group)) 
 
 write_csv(all, "terms_groups_all_3.csv")
 
