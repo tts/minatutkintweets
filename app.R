@@ -19,7 +19,8 @@ ui <- fluidPage(
   fluidRow(
     column(10,
            tags$div(class="header", checked = NA,
-                    tags$a(href="https://github.com/tts/minatutkintweets", "Ks. GitHub")))),
+                    tags$a(href="http://ropengov.org/fi/2021/10/mina-tutkin/", "Ks. rOpenGov-blogi"),
+                    tags$p("Twiiteistä on poistettu #minätutkin-aihetunnisteet, linkit ja @-alkuiset viittaukset Twitter-tileihin.")))),
   
   br(),
   
@@ -165,7 +166,7 @@ server <- function(input, output, session) {
     req <- httr::RETRY(verb = "POST",
                         url = paste0("https://ai.finto.fi/v1/projects/", project, "/suggest"),
                         body = list(text = tw_text, limit = input$nr, lang = tw_lang),
-                        user_agent("https://github.com/tts/minatutkintweets"))
+                        user_agent("https://ttso.shinyapps.io/minatutkintweets/"))
     
     # Parse result to a tibble
     r <- if (httr::status_code(req) != 200) {
