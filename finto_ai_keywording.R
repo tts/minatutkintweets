@@ -124,6 +124,10 @@ data_cleaned_by_user <- data_cleaned %>%
   mutate(alltext = paste0(text, collapse = "")) %>% 
   distinct(user_id, .keep_all = TRUE)
 
+# Few emojis still persist
+# https://stackoverflow.com/a/11971126
+data_cleaned_by_user <- map_df(data_cleaned_by_user, ~ gsub("[^[:alnum:]///' ]", "", .x))
+
 write_csv(data_cleaned_by_user, "cleaned_tweets_by_user.csv")
 
 #  Automatic keywording with Finto AI
