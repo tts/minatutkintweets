@@ -20,7 +20,8 @@ ui <- fluidPage(
     column(10,
            tags$div(class="header", checked = NA,
                     tags$a(href="http://ropengov.org/fi/2021/10/mina-tutkin/", "Ks. rOpenGov-blogi"),
-                    tags$p("Twiiteistä on poistettu #minätutkin-aihetunnisteet, linkit ja @-alkuiset viittaukset Twitter-tileihin.")))),
+                    tags$p("Twiiteistä on poistettu #minätutkin-aihetunnisteet, linkit, emojit ja @-alkuiset viittaukset Twitter-tileihin."),
+                    tags$p("Twiittejä voi hakea kontekstihaulla. Backspace kentän lopussa tyhjentää kentän.")))),
   
   br(),
   
