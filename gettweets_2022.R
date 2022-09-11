@@ -2,7 +2,7 @@ library(rtweet)
 library(tidyverse)
 
 #--------------------------------------------
-# #minätutkin tweets until 2022-09-11
+# #minätutkin tweets September 2022
 #--------------------------------------------
 
 q <- "#minätutkin"
