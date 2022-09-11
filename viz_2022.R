@@ -71,7 +71,7 @@ ggsave(
   "minatutkintweets_2022.png",
   width = 35, 
   height = 25, 
-  dpi = 300, 
+  dpi = 72, 
   units = "cm", 
   device = 'png'
 )
