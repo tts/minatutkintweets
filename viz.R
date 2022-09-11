@@ -59,11 +59,9 @@ ggplot(data = viz, aes(x = day, y = n, fill = interaction(n, day))) +
   geom_bar(stat = "identity", position = "fill", width = 1) +
   geom_text(aes(label = group), size = 4,
             position = position_fill(vjust = 0.5), check_overlap = TRUE, color = "grey10") +
-  scale_fill_manual("Ryhmä", 
-                    values = v_colors[viz$group],
-                    labels = with(viz, group[aux]), 
-                    breaks = with(viz, interaction(n, day)[aux])) +
-  scale_size_continuous(range = c(2, 5)) +
+  scale_fill_manual("Ryhmä",
+                    values = v_colors[viz$group]) +
+scale_size_continuous(range = c(2, 5)) +
   scale_x_continuous(breaks = seq(6, 12, 1)) +
   coord_cartesian(expand = FALSE, clip = "off") +
   labs(
@@ -77,7 +75,7 @@ ggsave(
   "minatutkintweets.png",
   width = 35, 
   height = 25, 
-  dpi = 300, 
+  dpi = 72, 
   units = "cm", 
   device = 'png'
 )
